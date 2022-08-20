@@ -107,7 +107,7 @@ public class DriveTrain extends SubsystemBase {
     //TODO: Add a stop method for the DriveTrain
   }
 
-  public void reset() {
+  public void reset(boolean b) {
     //TODO: Add a reset method for the DriveTrain
   }
 
