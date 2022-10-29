@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.DriveTrain.Cockpit;
 import frc.robot.subsystems.FeedbackPanel.PanelMode;
 
 import org.photonvision.PhotonCamera;

@@ -51,16 +51,6 @@ public class USBCamera extends CommandBase {
     return false;
   }
 
-  public static void changeCameraSource(DriveTrain.Cockpit mode) {
-    if (mode == DriveTrain.Cockpit.LEFT) {
-      putToDashboard(leftIntakeCam);
-    } else if (mode == DriveTrain.Cockpit.RIGHT) {
-      putToDashboard(rightIntakeCam);
-    } else {
-      putToDashboard(driveCam);
-    }
-  }
-
   private static void putToDashboard(HttpCamera source) {
     dashboardCam.setSource(source);
   }
