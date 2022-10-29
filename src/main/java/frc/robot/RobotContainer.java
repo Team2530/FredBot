@@ -60,7 +60,7 @@ public class RobotContainer {
   // TODO: Specify new values to pass into DriveTrain such as the controller values
   public final DriveTrain m_driveTrain = new DriveTrain(m_ahrs, stick1, xbox);
   private final Indicators lights = new Indicators(3);
-  private final PhotonVision vision = new PhotonVision(stick1, m_driveTrain, lights);
+  // private final PhotonVision vision = new PhotonVision(stick1, m_driveTrain, lights);
 
 
   // -------------------- Autonomous Commands -------------------- \\
