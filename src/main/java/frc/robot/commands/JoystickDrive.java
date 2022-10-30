@@ -23,22 +23,34 @@ import frc.robot.RobotContainer;
 import frc.robot.libraries.Deadzone;
 import frc.robot.subsystems.DriveTrain;
 
-public class SingleJoystickDrive extends CommandBase {
-  /**
-   * Creates a new SingleJoystickDrive.
-   */
+public class JoystickDrive extends CommandBase {
+  
   DriveTrain m_drivetrain;
-  Joystick stick;
+  static Joystick rightStick;
+  static Joystick leftStick;
+  static XboxController xbox;
+  /**Indicies are as follows:<p>[0] is Stick X<p>[1] is Stick Y<p>[2] is Stick Z */
+  static double[] leftStickValues = {0.0 , 0.0 , 0.0};
+  /**Indicies are as follows:<p>[0] is Stick X<p>[1] is Stick Y<p>[2] is Stick Z */
+  static double[] rightStickValues = {0.0 , 0.0 , 0.0};
 
-  public SingleJoystickDrive(DriveTrain m_drivetrain, Joystick stick) {
+  public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
     this.m_drivetrain = m_drivetrain;
-    this.stick = stick;
+    this.rightStick = rightStick;
+    this.leftStick = leftStick;
+    this.xbox = xbox;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    updateStickValues();
+    // if two joysticks are connected, assume tank drive, else arcade drive
+    if(leftStick.isConnected()) {
+      DriveTrain.tankDrive(leftStickValues[0], rightStickValues[0]);
+    } else if (xbox.isConnected())
+      DriveTrain.arcadeDrive(leftStickValues[0], leftStickValues[2]);
   }
 
   // Called once the command ends or is interrupted.
@@ -51,5 +63,14 @@ public class SingleJoystickDrive extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public static void updateStickValues() {
+    leftStickValues[0] = leftStick.getX();
+    leftStickValues[1] = leftStick.getY();
+    leftStickValues[2] = leftStick.getZ();
+    rightStickValues[0] = rightStick.getX();
+    rightStickValues[1] = rightStick.getY();
+    rightStickValues[2] = rightStick.getZ();
   }
 }

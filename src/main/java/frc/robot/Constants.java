@@ -58,5 +58,6 @@ public final class Constants {
     public static final double deadzone = 0.1;
     public static final double deadzoneZ = 0.4;
     public static final int stickport1 = 1; // stick port for joystick 1
+    public static final int stickport2 = 2;
     public static final int xboxport = 0; // xbox controller port
 }

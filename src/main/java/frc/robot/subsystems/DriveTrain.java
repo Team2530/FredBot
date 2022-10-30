@@ -55,7 +55,8 @@ public class DriveTrain extends SubsystemBase {
 
   // -------------------- Joysticks --------------------- \\
   // TODO: Add/Remove Joysticks as needed
-  Joystick stick;
+  Joystick stick1;
+  Joystick stick2;
   XboxController xbox;
 
   // ----------------- Shuffleboard Controls ------------------ \\
@@ -63,6 +64,9 @@ public class DriveTrain extends SubsystemBase {
 
   // ------------------------ PID gains ------------------------- \\
   // TODO: Set PID values
+
+  // --------------------- Drive Items --------------------------- \\
+  public static DifferentialDrive differentialDrive;
 
   // ------------------------ Diagnostics ------------------------- \\
   // TODO: Put Diagnostics Values Here
@@ -75,13 +79,14 @@ public class DriveTrain extends SubsystemBase {
   /**
    * Creates a new {@link DriveTrain}.
    */
-  public DriveTrain(AHRS ahrs, Joystick stick, XboxController xbox) {
+  public DriveTrain(AHRS ahrs, Joystick stick1, Joystick stick2, XboxController xbox) {
     this.ahrs = ahrs;
-    this.stick = stick;
+    this.stick1 = stick1;
+    this.stick2 = stick2;
     this.xbox = xbox;
     MotorControllerGroup leftMotors = new MotorControllerGroup(motorFL, motorBL);
     MotorControllerGroup rightMotors = new MotorControllerGroup(motorFL, motorBL);
-    DifferentialDrive differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+    differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
     differentialDrive.setSafetyEnabled(false);
   }
 
@@ -90,16 +95,16 @@ public class DriveTrain extends SubsystemBase {
     // This method will be called periodicly while the robot is enabled
   }
 
-  public void drive(double leftSpeed, double rightSpeed) {
-    setLeftSpeed(leftSpeed);
-    setRightSpeed(rightSpeed);
+  public static void tankDrive(double leftSpeed, double rightSpeed) {
+    differentialDrive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public static void arcadeDrive(double forwardSpeed, double rotation) {
+    differentialDrive.arcadeDrive(forwardSpeed, rotation, true);
   }
 
   public static void stop() {
-    motorFL.set(0.0);
-    motorFR.set(0.0);
-    motorBL.set(0.0);
-    motorBR.set(0.0);
+    differentialDrive.stopMotor();
   }
 
   /** Stops the Robot and Resets the Yaw Angle */

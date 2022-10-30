@@ -42,11 +42,10 @@ public class RobotContainer {
 
   // -------------------- Joysticks and Buttons -------------------- \\
   // Joysticks
-  final Joystick stick1 = new Joystick(Constants.stickport1); // Creates a joystick on port 1
-
+  final Joystick stick1 = new Joystick(Constants.stickport1); // port 1
+  final Joystick stick2 = new Joystick(Constants.stickport2); // port 2
   // Xbox Controller
   final XboxController xbox = new XboxController(Constants.xboxport);
-
   // The robot's subsystems and commands are defined here...
 
   // -------------------- Subsystems -------------------- \\
@@ -57,7 +56,7 @@ public class RobotContainer {
 
   // Outputs
   // TODO: Specify new values to pass into DriveTrain such as the controller values
-  public final DriveTrain m_driveTrain = new DriveTrain(m_ahrs, stick1, xbox);
+  public final DriveTrain m_driveTrain = new DriveTrain(m_ahrs, stick1, stick2, xbox);
   private final Indicators lights = new Indicators(3);
   // private final PhotonVision vision = new PhotonVision(stick1, m_driveTrain, lights);
 
