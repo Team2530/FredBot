@@ -29,6 +29,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 /**
@@ -46,12 +47,16 @@ public class DriveTrain extends SubsystemBase {
 
   private static double yawTarget = 0.0;
 
+  
+
   // -------------------- Motors -------------------- \\
-  // TODO: Specify Motors and values are all correct
-  static PWMVictorSPX motorFL = new PWMVictorSPX(Constants.MOTOR_FL_DRIVE_PORT);
-  static PWMVictorSPX motorFR = new PWMVictorSPX(Constants.MOTOR_FR_DRIVE_PORT);
-  static PWMVictorSPX motorBL = new PWMVictorSPX(Constants.MOTOR_BL_DRIVE_PORT);
-  static PWMVictorSPX motorBR = new PWMVictorSPX(Constants.MOTOR_BR_DRIVE_PORT);
+  // ! TODO: Specify Motors and values are all correct
+  static WPI_VictorSPX motorFL = new WPI_VictorSPX(Constants.MOTOR_FL_DRIVE_PORT);
+  static WPI_VictorSPX motorFR = new WPI_VictorSPX(Constants.MOTOR_FR_DRIVE_PORT);
+  static WPI_VictorSPX motorBL = new WPI_VictorSPX(Constants.MOTOR_BL_DRIVE_PORT);
+  static WPI_VictorSPX motorBR = new WPI_VictorSPX(Constants.MOTOR_BR_DRIVE_PORT);
+
+  
 
   // -------------------- Joysticks --------------------- \\
   // TODO: Add/Remove Joysticks as needed
@@ -66,15 +71,14 @@ public class DriveTrain extends SubsystemBase {
   // TODO: Set PID values
 
   // --------------------- Drive Items --------------------------- \\
-  public static DifferentialDrive differentialDrive;
 
+  static DifferentialDrive differentialDrive;
+  
   // ------------------------ Diagnostics ------------------------- \\
   // TODO: Put Diagnostics Values Here
   AHRS ahrs;
 
   // ---------------------------- Other ------------------------------- \\
-  static VictorSPXControlMode normalDrivingMode = VictorSPXControlMode.PercentOutput;
-  static VictorSPXControlMode rampDrivingMode = VictorSPXControlMode.Velocity;
 
   /**
    * Creates a new {@link DriveTrain}.
@@ -84,10 +88,12 @@ public class DriveTrain extends SubsystemBase {
     this.stick1 = stick1;
     this.stick2 = stick2;
     this.xbox = xbox;
-    MotorControllerGroup leftMotors = new MotorControllerGroup(motorFL, motorBL);
-    MotorControllerGroup rightMotors = new MotorControllerGroup(motorFL, motorBL);
-    differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
-    differentialDrive.setSafetyEnabled(false);
+    // creates a new Drive with the front motors as the leaders
+    motorBR.follow(motorFR);
+    motorBL.follow(motorFL);
+
+    this.differentialDrive = new DifferentialDrive(motorFR, motorFL);
+    
   }
 
   @Override
@@ -97,6 +103,7 @@ public class DriveTrain extends SubsystemBase {
 
   public static void tankDrive(double leftSpeed, double rightSpeed) {
     differentialDrive.tankDrive(leftSpeed, rightSpeed);
+    
   }
 
   public static void arcadeDrive(double forwardSpeed, double rotation) {

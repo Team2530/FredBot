@@ -42,7 +42,9 @@ public class RobotContainer {
 
   // -------------------- Joysticks and Buttons -------------------- \\
   // Joysticks
+  /**Also known as leftStick */
   final Joystick stick1 = new Joystick(Constants.stickport1); // port 1
+  /**Also known as rightStick */
   final Joystick stick2 = new Joystick(Constants.stickport2); // port 2
   // Xbox Controller
   final XboxController xbox = new XboxController(Constants.xboxport);
@@ -116,8 +118,7 @@ public class RobotContainer {
   }
 
   public Command getTelopCommand() {
-    // TODO: Create a new Telop command to return here
-    return null;
+    return new JoystickDrive(m_driveTrain, stick1, stick2, xbox);
   }
 
   public Command getTestCommand() {

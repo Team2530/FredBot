@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.libraries.Deadzone;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.SmartChoice;
 
 public class JoystickDrive extends CommandBase {
   
@@ -33,6 +35,10 @@ public class JoystickDrive extends CommandBase {
   static double[] leftStickValues = {0.0 , 0.0 , 0.0};
   /**Indicies are as follows:<p>[0] is Stick X<p>[1] is Stick Y<p>[2] is Stick Z */
   static double[] rightStickValues = {0.0 , 0.0 , 0.0};
+
+  static boolean perhaps = true;
+
+  
 
   public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
     this.m_drivetrain = m_drivetrain;
@@ -46,12 +52,9 @@ public class JoystickDrive extends CommandBase {
   @Override
   public void execute() {
     updateStickValues();
-    // if two joysticks are connected, assume tank drive, else arcade drive
-    if(leftStick.isConnected()) {
-      DriveTrain.tankDrive(leftStickValues[0], rightStickValues[0]);
-    } else if (xbox.isConnected())
-      DriveTrain.arcadeDrive(leftStickValues[0], leftStickValues[2]);
+    DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
   }
+
 
   // Called once the command ends or is interrupted.
   @Override
