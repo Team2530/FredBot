@@ -43,7 +43,11 @@ public class JoystickDrive extends CommandBase {
   public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
     this.m_drivetrain = m_drivetrain;
     this.rightStick = rightStick;
+
+    // ! LeftStick is the predominantly used stick! (In port 1)
     this.leftStick = leftStick;
+
+    
     this.xbox = xbox;
     // Use addRequirements() here to declare subsystem dependencies.
   }
