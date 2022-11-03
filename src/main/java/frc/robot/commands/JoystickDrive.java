@@ -26,19 +26,31 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.SmartChoice;
 
 public class JoystickDrive extends CommandBase {
-  
+
   DriveTrain m_drivetrain;
   static Joystick rightStick;
   static Joystick leftStick;
   static XboxController xbox;
-  /**Indicies are as follows:<p>[0] is Stick X<p>[1] is Stick Y<p>[2] is Stick Z */
-  static double[] leftStickValues = {0.0 , 0.0 , 0.0};
-  /**Indicies are as follows:<p>[0] is Stick X<p>[1] is Stick Y<p>[2] is Stick Z */
-  static double[] rightStickValues = {0.0 , 0.0 , 0.0};
-
-  static boolean perhaps = true;
-
-  
+  /**
+   * Indicies are as follows:
+   * <p>
+   * [0] is Stick X
+   * <p>
+   * [1] is Stick Y
+   * <p>
+   * [2] is Stick Z
+   */
+  static double[] leftStickValues = { 0.0, 0.0, 0.0 };
+  /**
+   * Indicies are as follows:
+   * <p>
+   * [0] is Stick X
+   * <p>
+   * [1] is Stick Y
+   * <p>
+   * [2] is Stick Z
+   */
+  static double[] rightStickValues = { 0.0, 0.0, 0.0 };
 
   public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
     this.m_drivetrain = m_drivetrain;
@@ -47,7 +59,6 @@ public class JoystickDrive extends CommandBase {
     // ! LeftStick is the predominantly used stick! (In port 1)
     this.leftStick = leftStick;
 
-    
     this.xbox = xbox;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -56,9 +67,10 @@ public class JoystickDrive extends CommandBase {
   @Override
   public void execute() {
     updateStickValues();
-    DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
+    if (leftStick.getRawButton(Constants.STOP_BUTTON) == false) {
+      DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
+    }
   }
-
 
   // Called once the command ends or is interrupted.
   @Override

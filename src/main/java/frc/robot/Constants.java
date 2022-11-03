@@ -38,7 +38,7 @@ public final class Constants {
 
     
 
-    // Shooter motor
+    // Shooter motor port
     public static final int SHOOTER_MOTOR_PORT = 40;
 
     // ----------Sensor Constants-----------\\
@@ -60,4 +60,8 @@ public final class Constants {
     public static final int stickport1 = 1; // stick port for joystick 1
     public static final int stickport2 = 2;
     public static final int xboxport = 0; // xbox controller port
+
+    // --------------- Buttons --------------- \\
+
+    public static final int STOP_BUTTON = 12;
 }

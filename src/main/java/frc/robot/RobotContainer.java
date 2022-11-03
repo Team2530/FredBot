@@ -92,7 +92,11 @@ public class RobotContainer {
    * This method sets the button mapping and allows buttons to 
    * make thinsg happen
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    new JoystickButton(stick1, Constants.STOP_BUTTON).whileHeld(() -> m_driveTrain.stop());
+
+
+  }
 
   
 

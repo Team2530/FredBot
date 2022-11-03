@@ -38,13 +38,12 @@ public class Autonomous extends CommandBase {
 
   boolean perhaps = false;
 
-  
   @Override
   // Auto should work if commands are placed inside the SequentialCommandGroup
   public void initialize() {
-    //TODO: Specify Auto command
+    // TODO: Specify Auto command
     SequentialCommandGroup example = new SequentialCommandGroup(
-        //TODO: Insert
+    // TODO: Insert
     );
     System.out.println("Starting Autonomous Commands...");
     System.out.println("Please don't run into something!");
@@ -59,13 +58,13 @@ public class Autonomous extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO: Set a condition for when Auto is finished
+    // TODO: Set a condition for when Auto is finished
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //TODO: Set a conditon for Auto to finish
+    // TODO: Set a conditon for Auto to finish
     return true;
   }
 }

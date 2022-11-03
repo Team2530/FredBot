@@ -103,7 +103,6 @@ public class DriveTrain extends SubsystemBase {
 
   public static void tankDrive(double leftSpeed, double rightSpeed) {
     differentialDrive.tankDrive(leftSpeed, rightSpeed);
-    
   }
 
   public static void arcadeDrive(double forwardSpeed, double rotation) {
@@ -111,7 +110,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public static void stop() {
-    differentialDrive.stopMotor();
+    motorFR.set(0);
+    motorFL.set(0);
   }
 
   /** Stops the Robot and Resets the Yaw Angle */
