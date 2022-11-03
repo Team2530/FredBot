@@ -16,7 +16,7 @@ public class USBCamera extends CommandBase {
   static HttpCamera driveCam, leftIntakeCam, rightIntakeCam;
   static MjpegServer dashboardCam = CameraServer.addSwitchedCamera("Dashcam");
 
-  /** Creates a new USBCamera. */ 
+  /** Creates a new USBCamera. */  
   public USBCamera() {
     // Use addRequirements() here to declare subsystem dependencies.
     driveCam = new HttpCamera("driveCam", "http://10.25.30.2:1182/stream.mjpg");
