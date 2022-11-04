@@ -52,6 +52,9 @@ public class JoystickDrive extends CommandBase {
    */
   static double[] rightStickValues = { 0.0, 0.0, 0.0 };
 
+  SmartChoice s = new SmartChoice("Joystick Z", rightStickValues[2]);
+
+
   public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
     this.m_drivetrain = m_drivetrain;
     this.rightStick = rightStick;
@@ -69,6 +72,8 @@ public class JoystickDrive extends CommandBase {
     updateStickValues();
     if (leftStick.getRawButton(Constants.STOP_BUTTON) == false) {
       DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
+
+      s.updateValue(rightStickValues[2]);
     }
   }
 
