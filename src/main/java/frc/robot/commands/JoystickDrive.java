@@ -34,21 +34,21 @@ public class JoystickDrive extends CommandBase {
   /**
    * Indicies are as follows:
    * <p>
-   * [0] is Stick X
+   * [0] is Stick X (left/right)
    * <p>
-   * [1] is Stick Y
+   * [1] is Stick Y (forward/backwards)
    * <p>
-   * [2] is Stick Z
+   * [2] is Stick Z (twist)
    */
   static double[] leftStickValues = { 0.0, 0.0, 0.0 };
   /**
    * Indicies are as follows:
    * <p>
-   * [0] is Stick X
+   * [0] is Stick X (left/right)
    * <p>
-   * [1] is Stick Y
+   * [1] is Stick Y (forward/backwards)
    * <p>
-   * [2] is Stick Z
+   * [2] is Stick Z (twist)
    */
   static double[] rightStickValues = { 0.0, 0.0, 0.0 };
 
@@ -67,8 +67,12 @@ public class JoystickDrive extends CommandBase {
   @Override
   public void execute() {
     updateStickValues();
-    if (leftStick.getRawButton(Constants.STOP_BUTTON) == false) {
-      DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
+    if (leftStick.getRawButton(Constants.STOP_BUTTON)) {
+      m_drivetrain.stop();
+    } else if (leftStick.getRawButton(Constants.VECTOR_DRIVE_BUTTON)) {
+      m_drivetrain.vectorDrive(Deadzone.deadZone(leftStickValues[0], 0.05), Deadzone.deadZone(leftStickValues[1], 0.05));
+    } else {
+      m_drivetrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
     }
   }
 

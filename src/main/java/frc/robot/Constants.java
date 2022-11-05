@@ -62,6 +62,6 @@ public final class Constants {
     public static final int xboxport = 0; // xbox controller port
 
     // --------------- Buttons --------------- \\
-
+    public static final int VECTOR_DRIVE_BUTTON = 2;
     public static final int STOP_BUTTON = 12;
 }

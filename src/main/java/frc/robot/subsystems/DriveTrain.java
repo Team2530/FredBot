@@ -47,16 +47,12 @@ public class DriveTrain extends SubsystemBase {
 
   private static double yawTarget = 0.0;
 
-  
-
   // -------------------- Motors -------------------- \\
   // ! TODO: Specify Motors and values are all correct
   static WPI_VictorSPX motorFL = new WPI_VictorSPX(Constants.MOTOR_FL_DRIVE_PORT);
   static WPI_VictorSPX motorFR = new WPI_VictorSPX(Constants.MOTOR_FR_DRIVE_PORT);
   static WPI_VictorSPX motorBL = new WPI_VictorSPX(Constants.MOTOR_BL_DRIVE_PORT);
   static WPI_VictorSPX motorBR = new WPI_VictorSPX(Constants.MOTOR_BR_DRIVE_PORT);
-
-  
 
   // -------------------- Joysticks --------------------- \\
   // TODO: Add/Remove Joysticks as needed
@@ -73,7 +69,7 @@ public class DriveTrain extends SubsystemBase {
   // --------------------- Drive Items --------------------------- \\
 
   static DifferentialDrive differentialDrive;
-  
+
   // ------------------------ Diagnostics ------------------------- \\
   // TODO: Put Diagnostics Values Here
   AHRS ahrs;
@@ -91,25 +87,47 @@ public class DriveTrain extends SubsystemBase {
     // creates a new Drive with the front motors as the leaders
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
-
     this.differentialDrive = new DifferentialDrive(motorFR, motorFL);
-    
+
   }
 
   @Override
   public void periodic() {
-    // This method will be called periodicly while the robot is enabled
+
   }
 
   public static void tankDrive(double leftSpeed, double rightSpeed) {
     differentialDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
-  public static void arcadeDrive(double forwardSpeed, double rotation) {
+  public void arcadeDrive(double forwardSpeed, double rotation) {
     differentialDrive.arcadeDrive(forwardSpeed, rotation, true);
   }
 
-  public static void stop() {
+  public void vectorDrive(double stickX, double stickY) {
+    double currentAngle = 0; // ahrs.getAngle() % 360;
+    // return the "length" of the joystick vector
+    double vectorLength = Math.min(1, Math.sqrt((Math.pow(stickX, 2) + Math.pow(stickY, 2))));
+    // return the "angle" of the joystick vector
+    double vectorAngle = to360(stickX, stickY);
+    // System.out.println("Start: " + vectorAngle);
+    // drive the robot based on the angle input
+    if (Math.abs(vectorAngle - currentAngle) < 0.5) {
+      if (vectorAngle - currentAngle > 0) {
+        tankDrive(-0.2, 0.2);
+      } else if (currentAngle - vectorAngle < 0) {
+        tankDrive(0.2, -0.2);
+      }
+    } else {
+      tankDrive(0.5, 0.5);
+    }
+
+    // System.out.println("End: " + vectorAngle);
+
+    // TODO: Add PID to allow rotation by the calculated amount
+  }
+
+  public void stop() {
     motorFR.set(0);
     motorFL.set(0);
   }
@@ -121,14 +139,35 @@ public class DriveTrain extends SubsystemBase {
   }
 
   /** Sets the right motors to the same speed and control mode */
-  public static void setLeftSpeed(double speed) {
+  public void setLeftSpeed(double speed) {
     motorFL.set(speed);
     motorBL.set(speed);
   }
 
   /** Sets the left motors to the same speed and control mode */
-  public static void setRightSpeed(double speed) {
+  public void setRightSpeed(double speed) {
     motorFR.set(speed);
     motorBR.set(speed);
   }
+  /**
+   * Converts stick angle into 360 degree angle
+   * @param stickX the stick x position
+   * @param stickY the stick y position
+   * @return the 360 (0-359) degree position that the stick is at
+   */
+  public double to360(double stickX, double stickY){
+    double vectorAngle = Math.toDegrees(Math.atan2(stickY, stickX));
+    if (stickX <= 0 && stickY <= 0) {
+      vectorAngle = -90 + Math.abs(vectorAngle);
+    } else if (stickX < 0 && stickY > 0) {
+      vectorAngle = 270 - vectorAngle;
+    } else if (stickX >= 0 && stickY >= 0) {
+      vectorAngle = 270 - vectorAngle;
+    } else {
+      vectorAngle = 270 + Math.abs(vectorAngle);
+    }
+
+    return vectorAngle;
+  }
+
 }
