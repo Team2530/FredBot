@@ -9,8 +9,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import org.photonvision.PhotonCamera;
@@ -52,7 +55,12 @@ public class JoystickDrive extends CommandBase {
    */
   static double[] rightStickValues = { 0.0, 0.0, 0.0 };
 
-  SmartChoice s = new SmartChoice("Joystick Z", rightStickValues[2]);
+  // --------------------- Shuffleboard --------------------- \\
+
+  SmartChoice s = new SmartChoice("Stick X", SmartChoice.makeEntry("Stick X" , rightStickValues));
+
+
+  
 
 
   public JoystickDrive(DriveTrain m_drivetrain, Joystick leftStick, Joystick rightStick, XboxController xbox) {
@@ -69,11 +77,10 @@ public class JoystickDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Shuffleboard.update();
     updateStickValues();
     if (leftStick.getRawButton(Constants.STOP_BUTTON) == false) {
       DriveTrain.arcadeDrive(Deadzone.deadZone(leftStickValues[1], 0.05), Deadzone.deadZone(leftStickValues[2], 0.05));
-
-      s.updateValue(rightStickValues[2]);
     }
   }
 
