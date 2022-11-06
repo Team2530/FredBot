@@ -87,7 +87,7 @@ public class DriveTrain extends SubsystemBase {
     // creates a new Drive with the front motors as the leaders
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
-    this.differentialDrive = new DifferentialDrive(motorFR, motorFL);
+    DriveTrain.differentialDrive = new DifferentialDrive(motorFR, motorFL);
 
   }
 
@@ -105,21 +105,21 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void vectorDrive(double stickX, double stickY) {
-    double currentAngle = 0; // ahrs.getAngle() % 360;
+    double currentAngle = 20; // ahrs.getAngle() % 360;
     // return the "length" of the joystick vector
     double vectorLength = Math.min(1, Math.sqrt((Math.pow(stickX, 2) + Math.pow(stickY, 2))));
     // return the "angle" of the joystick vector
     double vectorAngle = to360(stickX, stickY);
     // System.out.println("Start: " + vectorAngle);
-    // drive the robot based on the angle input
-    if (Math.abs(vectorAngle - currentAngle) < 0.5) {
-      if (vectorAngle - currentAngle > 0) {
-        tankDrive(-0.2, 0.2);
-      } else if (currentAngle - vectorAngle < 0) {
-        tankDrive(0.2, -0.2);
+    // drive the robot based on the angle input (3 Degree Tolerance)
+    if (Math.abs(vectorAngle - currentAngle) > Constants.turnTolerance) {
+      if (180 - Math.abs(vectorAngle - currentAngle) > 0) {
+        differentialDrive.tankDrive(-0.5, 0.5);
+      } else {
+        differentialDrive.tankDrive(0.5, -0.5);
       }
     } else {
-      tankDrive(0.5, 0.5);
+      differentialDrive.tankDrive(0.5, 0.5);
     }
 
     // System.out.println("End: " + vectorAngle);
@@ -149,13 +149,15 @@ public class DriveTrain extends SubsystemBase {
     motorFR.set(speed);
     motorBR.set(speed);
   }
+
   /**
    * Converts stick angle into 360 degree angle
+   * 
    * @param stickX the stick x position
    * @param stickY the stick y position
    * @return the 360 (0-359) degree position that the stick is at
    */
-  public double to360(double stickX, double stickY){
+  public double to360(double stickX, double stickY) {
     double vectorAngle = Math.toDegrees(Math.atan2(stickY, stickX));
     if (stickX <= 0 && stickY <= 0) {
       vectorAngle = -90 + Math.abs(vectorAngle);
@@ -166,7 +168,6 @@ public class DriveTrain extends SubsystemBase {
     } else {
       vectorAngle = 270 + Math.abs(vectorAngle);
     }
-
     return vectorAngle;
   }
 

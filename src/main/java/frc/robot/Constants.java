@@ -47,6 +47,7 @@ public final class Constants {
     // ----------Driving Constants----------\\
     public static final VictorSPXControlMode normalDriveMode = VictorSPXControlMode.PercentOutput;
     public static final VictorSPXControlMode velocityDriveMode = VictorSPXControlMode.Velocity;
+    public static final double turnTolerance = 3.0;
 
     public static final double brownOutVoltage = 8.00;
 
