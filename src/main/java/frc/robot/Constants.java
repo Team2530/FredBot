@@ -41,14 +41,19 @@ public final class Constants {
     // Shooter motor port
     public static final int SHOOTER_MOTOR_PORT = 40;
 
-    // ----------Sensor Constants-----------\\
+    // ----------Encoder Constants-----------\\
+    public static final int leftEncoderChannel = 1;
+    public static final int rightEncoderChannel = 3;
     public static final int ENCODER_TICKS_PER_REVOLUTION = 2048;
+    //! wheel radius is 4 inches?
+    public static final double wheelRadius = 4;
+
+    // ---------- Sensor Constants ----------\\
 
     // ----------Driving Constants----------\\
     public static final VictorSPXControlMode normalDriveMode = VictorSPXControlMode.PercentOutput;
     public static final VictorSPXControlMode velocityDriveMode = VictorSPXControlMode.Velocity;
     public static final double turnTolerance = 3.0;
-
     public static final double brownOutVoltage = 8.00;
 
     // ----------Field Constants----------\\

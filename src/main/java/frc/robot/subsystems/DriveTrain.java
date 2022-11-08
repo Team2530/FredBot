@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -22,7 +23,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
-
 import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -53,6 +53,9 @@ public class DriveTrain extends SubsystemBase {
   static WPI_VictorSPX motorFR = new WPI_VictorSPX(Constants.MOTOR_FR_DRIVE_PORT);
   static WPI_VictorSPX motorBL = new WPI_VictorSPX(Constants.MOTOR_BL_DRIVE_PORT);
   static WPI_VictorSPX motorBR = new WPI_VictorSPX(Constants.MOTOR_BR_DRIVE_PORT);
+
+  static Encoder leftEncoder = new Encoder(Constants.leftEncoderChannel, Constants.leftEncoderChannel + 1);
+  static Encoder rightEncoder = new Encoder(Constants.rightEncoderChannel, Constants.rightEncoderChannel + 1);
 
   // -------------------- Joysticks --------------------- \\
   // TODO: Add/Remove Joysticks as needed
@@ -88,6 +91,9 @@ public class DriveTrain extends SubsystemBase {
     motorBR.follow(motorFR);
     motorBL.follow(motorFL);
     DriveTrain.differentialDrive = new DifferentialDrive(motorFR, motorFL);
+    // Both encoders are set to the distance / ticks per revolution aka (wheelRaduis (feet) * pi * 2) / ticks
+    leftEncoder.setDistancePerPulse((Constants.wheelRadius / 12.) * Math.PI * 2 / 2048);
+    rightEncoder.setDistancePerPulse((Constants.wheelRadius / 12.) * Math.PI * 2 / 2048);
 
   }
 
@@ -169,6 +175,18 @@ public class DriveTrain extends SubsystemBase {
       vectorAngle = 270 + Math.abs(vectorAngle);
     }
     return vectorAngle;
+  }
+  /**
+   * @return the value in ft / s
+   */
+  public double getLeftEncoder() {
+    return leftEncoder.getRate();
+  }
+  /**
+   * @return the value in ft / s
+   */
+  public double getRightEncoder() {
+    return rightEncoder.get();
   }
 
 }
