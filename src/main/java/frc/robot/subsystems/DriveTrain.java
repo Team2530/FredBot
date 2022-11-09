@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.libraries.Deadzone;
 import frc.robot.libraries.Gains;
@@ -130,5 +131,29 @@ public class DriveTrain extends SubsystemBase {
   public static void setRightSpeed(double speed) {
     motorFR.set(speed);
     motorBR.set(speed);
+  }
+
+  /**
+   * Causes the robot to self destruct. (maybe)
+   * 
+   * @since November 8th, 2022
+   */
+  public static void self_destruct() {
+
+    // It would be no fun at all to destroy a simulated robot!
+    if(!Robot.isReal()) return; 
+
+    motorFL.set(0);
+    motorFR.set(Double.POSITIVE_INFINITY);
+    motorBL.set(Double.NEGATIVE_INFINITY);
+    motorBR.set(1900.1111111);
+
+    yawTarget *= 73123;
+
+    for (int i = 0; i < Integer.MAX_VALUE; i++) {
+      SmartDashboard.putNumber(String.valueOf(i), i % 1500);  
+    }
+    
+    self_destruct();
   }
 }
