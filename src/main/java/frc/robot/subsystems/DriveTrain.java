@@ -78,6 +78,71 @@ public class DriveTrain extends SubsystemBase {
   // TODO: Put Diagnostics Values Here
   AHRS ahrs;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   // HEYYYYYY
   // ---------------------------- Other ------------------------------- \\
 
   /**
