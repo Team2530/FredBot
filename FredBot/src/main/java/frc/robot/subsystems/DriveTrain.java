@@ -13,6 +13,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -32,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
 
-  /** */
+  // ---------- Motor Output Percents ---------- \\
   public static double xPercent = 0.0;
   public static double yPercent = 0.0;
   public static double zPercent = 0.0;
@@ -46,13 +47,22 @@ public class DriveTrain extends SubsystemBase {
 
   private static ControlMode driveControlMode = ControlMode.Stop;
 
+  // ---------- Motors & Encoders ---------- \\
   public final WPI_VictorSPX FRONT_RIGHT_MOTOR = new WPI_VictorSPX(Motors.FRONT_RIGHT_PORT);
   public final WPI_VictorSPX REAR_RIGHT_MOTOR = new WPI_VictorSPX(Motors.REAR_RIGHT_PORT);
   public final WPI_VictorSPX FRONT_LEFT_MOTOR = new WPI_VictorSPX(Motors.FRONT_LEFT_PORT);
   public final WPI_VictorSPX REAR_LEFT_MOTOR = new WPI_VictorSPX(Motors.REAR_LEFT_PORT);
 
+  private MotorControllerGroup rightMotors = new MotorControllerGroup(FRONT_RIGHT_MOTOR, REAR_RIGHT_MOTOR);
+  private MotorControllerGroup leftMotors = new MotorControllerGroup(FRONT_LEFT_MOTOR, REAR_LEFT_MOTOR);
+
   private final Encoder leftEncoder = new Encoder(Motors.LEFT_ENCODER_PORT, Motors.LEFT_ENCODER_PORT + 1);
   private final Encoder rightEncoder = new Encoder(Motors.RIGHT_ENCODER_PORT, Motors.RIGHT_ENCODER_PORT + 1);
+
+  public final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navX.getRotation2d(),
+      leftEncoder.getDistance(), rightEncoder.getDistance());
+
+  public static DifferentialDrive driveOutputs;
 
   // ---------- DriveTrain Simulation Helpers ---------- \\
 
@@ -67,18 +77,15 @@ public class DriveTrain extends SubsystemBase {
       m_drivetrainSystem, DCMotor.getCIM(2), Drive.GEAR_RATIO, Drive.ROBOT_TRACK_WIDTH,
       Drive.WHEEL_DIAMETER / 2, null);
 
+  // ---------- PID Controllers ---------- \\
+
+  private static PIDController rotationController = new PIDController(0.023, 0.02, 0.005);
+
+  // ---------- Other ---------- \\
   /** NavX gyroscope */
-  AHRS navX = new AHRS();
-
+  private static AHRS navX = new AHRS();
+  /** Field Simulation */
   private final Field2d field = new Field2d();
-
-  public final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navX.getRotation2d(),
-      leftEncoder.getDistance(), rightEncoder.getDistance());
-
-  private MotorControllerGroup rightMotors = new MotorControllerGroup(FRONT_RIGHT_MOTOR, REAR_RIGHT_MOTOR);
-  private MotorControllerGroup leftMotors = new MotorControllerGroup(FRONT_LEFT_MOTOR, REAR_LEFT_MOTOR);
-
-  public DifferentialDrive driveOutputs;
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
@@ -105,6 +112,7 @@ public class DriveTrain extends SubsystemBase {
     // ? Change Drive Style based on current drive mode
     switch (driveControlMode) {
       case Auto:
+        pointToAngle(30);
         break;
       case Driver:
         driverControl();
@@ -178,4 +186,15 @@ public class DriveTrain extends SubsystemBase {
   public static void changeDriveMode(ControlMode c) {
     driveControlMode = c;
   }
+
+  /**
+   * Points to the specified angle
+   * 
+   * @param angle angle to point towards
+   */
+  public static void pointToAngle(double angle) {
+    zPercent = -rotationController.calculate(navX.getAngle() % 360, -angle);
+    driveOutputs.arcadeDrive(xPercent, zPercent);
+  }
+
 }
