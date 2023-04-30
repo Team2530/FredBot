@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
+import frc.robot.utilities.Path;
+import frc.robot.utilities.Waypoint;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -47,6 +49,12 @@ public class DriveTrain extends SubsystemBase {
 
   private static ControlMode driveControlMode = ControlMode.Stop;
 
+  Path testPath = new Path(new Waypoint(1, 1), new Waypoint(5, 2), new Waypoint(2, 5),
+      new Waypoint(3, 4), new Waypoint(1, 10));
+
+  /** NavX gyroscope */
+  private static final AHRS navX = new AHRS();
+
   // ---------- Motors & Encoders ---------- \\
   public final WPI_VictorSPX FRONT_RIGHT_MOTOR = new WPI_VictorSPX(Motors.FRONT_RIGHT_PORT);
   public final WPI_VictorSPX REAR_RIGHT_MOTOR = new WPI_VictorSPX(Motors.REAR_RIGHT_PORT);
@@ -56,10 +64,10 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup rightMotors = new MotorControllerGroup(FRONT_RIGHT_MOTOR, REAR_RIGHT_MOTOR);
   private MotorControllerGroup leftMotors = new MotorControllerGroup(FRONT_LEFT_MOTOR, REAR_LEFT_MOTOR);
 
-  private final Encoder leftEncoder = new Encoder(Motors.LEFT_ENCODER_PORT, Motors.LEFT_ENCODER_PORT + 1);
-  private final Encoder rightEncoder = new Encoder(Motors.RIGHT_ENCODER_PORT, Motors.RIGHT_ENCODER_PORT + 1);
+  private final static Encoder leftEncoder = new Encoder(Motors.LEFT_ENCODER_PORT, Motors.LEFT_ENCODER_PORT + 1);
+  private final static Encoder rightEncoder = new Encoder(Motors.RIGHT_ENCODER_PORT, Motors.RIGHT_ENCODER_PORT + 1);
 
-  public final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navX.getRotation2d(),
+  public static final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navX.getRotation2d(),
       leftEncoder.getDistance(), rightEncoder.getDistance());
 
   public static DifferentialDrive driveOutputs;
@@ -82,8 +90,6 @@ public class DriveTrain extends SubsystemBase {
   private static PIDController rotationController = new PIDController(0.023, 0.02, 0.005);
 
   // ---------- Other ---------- \\
-  /** NavX gyroscope */
-  private static AHRS navX = new AHRS();
   /** Field Simulation */
   private final Field2d field = new Field2d();
 
@@ -112,7 +118,6 @@ public class DriveTrain extends SubsystemBase {
     // ? Change Drive Style based on current drive mode
     switch (driveControlMode) {
       case Auto:
-        pointToAngle(30);
         break;
       case Driver:
         driverControl();
@@ -125,10 +130,11 @@ public class DriveTrain extends SubsystemBase {
     }
 
     if (RobotContainer.JOYSTICK.getRawButton(1)) {
-      driveControlMode = ControlMode.Auto;
+      testPath.schedule();
     }
 
     if (RobotContainer.JOYSTICK.getRawButton(2)) {
+      testPath.cancel();
       driveControlMode = ControlMode.Driver;
     }
 
@@ -192,8 +198,10 @@ public class DriveTrain extends SubsystemBase {
    * 
    * @param angle angle to point towards
    */
-  public static void pointToAngle(double angle) {
+  public static void driveAtAngle(double angle, double speed) {
     zPercent = -rotationController.calculate(navX.getAngle() % 360, -angle);
+    xPercent = speed * Math.cos(Math.toRadians(Math.abs(navX.getAngle() % 360) - angle));
+
     driveOutputs.arcadeDrive(xPercent, zPercent);
   }
 
