@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
-import frc.robot.utilities.Path;
-import frc.robot.utilities.Waypoint;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -48,9 +46,6 @@ public class DriveTrain extends SubsystemBase {
   }
 
   private static ControlMode driveControlMode = ControlMode.Stop;
-
-  Path testPath = new Path(new Waypoint(1, 1), new Waypoint(5, 2), new Waypoint(2, 5),
-      new Waypoint(3, 4), new Waypoint(1, 10));
 
   /** NavX gyroscope */
   private static final AHRS navX = new AHRS();
@@ -127,15 +122,6 @@ public class DriveTrain extends SubsystemBase {
         break;
       case Vision:
         break;
-    }
-
-    if (RobotContainer.JOYSTICK.getRawButton(1)) {
-      testPath.schedule();
-    }
-
-    if (RobotContainer.JOYSTICK.getRawButton(2)) {
-      testPath.cancel();
-      driveControlMode = ControlMode.Driver;
     }
 
   }
