@@ -26,7 +26,6 @@ public class Waypoint extends CommandBase {
         Pose2d currentPose = DriveTrain.odometry.getPoseMeters();
         double yDiff = yPos - currentPose.getY();
         double xDiff = xPos - currentPose.getX();
-
         double angle = Math.toDegrees(Math.atan((yDiff) / (xDiff)));
         double speed = Math.sqrt(Math.pow(yDiff, 2) + Math.pow(xDiff, 2));
 
