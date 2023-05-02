@@ -15,15 +15,21 @@ import frc.robot.subsystems.DriveTrain;
 public class Cycle extends CommandBase {
 
     RamseteCommand pathCommand;
+    Trajectory trajectory;
     DriveTrain driveTrain = RobotContainer.DRIVE_TRAIN;
 
     public Cycle(Trajectory trajectory) {
+        this.trajectory = trajectory;
         pathCommand = new RamseteCommand(trajectory, DriveTrain::getPose,
                 new RamseteController(Auto.RAMSETE_BETA, Auto.RAMSETE_ZETA),
                 new SimpleMotorFeedforward(Auto.KS, Auto.KV), DriveTrain.kinematics, DriveTrain::getWheelSpeeds,
                 new PIDController(Auto.DRIVE_VELOCITY_CONSTANT, 0, 0),
                 new PIDController(Auto.DRIVE_VELOCITY_CONSTANT, 0, 0), driveTrain::tankDriveVolts,
                 driveTrain);
+    }
+
+    @Override
+    public void initialize() {
         // Stops Robot when finished
         pathCommand.andThen(() -> RobotContainer.DRIVE_TRAIN.tankDriveVolts(0, 0));
     }

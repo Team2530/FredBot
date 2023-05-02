@@ -53,7 +53,7 @@ public class RobotContainer {
       // Set Start to current position
       DriveTrain.odometry.getPoseMeters(),
       // Points to make a nice entry
-      List.of(new Translation2d(11.2, 7), new Translation2d(7.7, 3), new Translation2d(5.0, 1.0)),
+      List.of(new Translation2d(9.8, 6.3), new Translation2d(8, 3), new Translation2d(6.4, 1)),
       // Final state
       new Pose2d(1.9, 1.0, new Rotation2d(Math.PI)), DriveTrain.config));
 
