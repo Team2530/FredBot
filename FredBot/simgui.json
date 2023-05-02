@@ -1,5 +1,12 @@
 {
   "HALProvider": {
+    "Encoders": {
+      "0": {
+        "header": {
+          "open": true
+        }
+      }
+    },
     "Other Devices": {
       "Talon FX[1]": {
         "header": {
@@ -36,6 +43,14 @@
           "open": true
         }
       }
+    },
+    "RoboRIO": {
+      "5V Rail": {
+        "open": true
+      },
+      "window": {
+        "visible": true
+      }
     }
   },
   "NTProvider": {
@@ -49,6 +64,7 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "image": "/Users/coltenkiehne/Desktop/Screenshot 2023-04-30 at 16.06.16.png",
         "window": {
           "visible": true
         }

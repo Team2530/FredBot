@@ -69,4 +69,22 @@ public final class Constants {
     public static final double GEAR_RATIO = 8;
   }
 
+  /** All Autonomous realted Constants */
+  public static final class Auto {
+
+    // ----------- SysID Constants ---------- \\
+    public static final double KS = 1;
+    public static final double KV = 1;
+
+    public static final double MAX_SPEED = 3.5;
+
+    public static final double MAX_ACCELERATION = 3;
+
+    public static final double RAMSETE_BETA = 2.0;
+
+    public static final double RAMSETE_ZETA = 0.7;
+
+    public static final double DRIVE_VELOCITY_CONSTANT = 5;
+  }
+
 }

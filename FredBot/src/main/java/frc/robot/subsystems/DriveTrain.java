@@ -7,8 +7,9 @@ package frc.robot.subsystems;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
-import frc.robot.utilities.Path;
-import frc.robot.utilities.Waypoint;
+import frc.robot.utilities.Cycle;
+
+import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -16,13 +17,21 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -49,11 +58,8 @@ public class DriveTrain extends SubsystemBase {
 
   private static ControlMode driveControlMode = ControlMode.Stop;
 
-  Path testPath = new Path(new Waypoint(1, 1), new Waypoint(5, 2), new Waypoint(2, 5),
-      new Waypoint(3, 4), new Waypoint(1, 10));
-
   /** NavX gyroscope */
-  private static final AHRS navX = new AHRS();
+  public static final AHRS navX = new AHRS();
 
   // ---------- Motors & Encoders ---------- \\
   public final WPI_VictorSPX FRONT_RIGHT_MOTOR = new WPI_VictorSPX(Motors.FRONT_RIGHT_PORT);
@@ -69,6 +75,8 @@ public class DriveTrain extends SubsystemBase {
 
   public static final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(navX.getRotation2d(),
       leftEncoder.getDistance(), rightEncoder.getDistance());
+
+  public static final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Drive.ROBOT_TRACK_WIDTH);
 
   public static DifferentialDrive driveOutputs;
 
@@ -88,6 +96,14 @@ public class DriveTrain extends SubsystemBase {
   // ---------- PID Controllers ---------- \\
 
   private static PIDController rotationController = new PIDController(0.023, 0.02, 0.005);
+
+  // ---------- Path Following ---------- \\
+
+  public static final DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
+      new SimpleMotorFeedforward(Auto.KS, Auto.KV), kinematics, 10);
+
+  public static final TrajectoryConfig config = new TrajectoryConfig(Auto.MAX_SPEED, Auto.MAX_ACCELERATION)
+      .setKinematics(kinematics).addConstraint(voltageConstraint);
 
   // ---------- Other ---------- \\
   /** Field Simulation */
@@ -128,16 +144,6 @@ public class DriveTrain extends SubsystemBase {
       case Vision:
         break;
     }
-
-    if (RobotContainer.JOYSTICK.getRawButton(1)) {
-      testPath.schedule();
-    }
-
-    if (RobotContainer.JOYSTICK.getRawButton(2)) {
-      testPath.cancel();
-      driveControlMode = ControlMode.Driver;
-    }
-
   }
 
   /** Updates the current Odometry based on the motor encoders */
@@ -165,7 +171,10 @@ public class DriveTrain extends SubsystemBase {
       // Update actual odometry based on calculated values
       odometry.update(navX.getRotation2d(), simLeftEncoder.getDistance(), simRightEncoder.getDistance());
     }
+  }
 
+  public static void resetOdometry(Pose2d pose) {
+    odometry.resetPosition(navX.getRotation2d(), leftEncoder.getDistance(), rightEncoder.getDistance(), pose);
   }
 
   /**
@@ -203,6 +212,20 @@ public class DriveTrain extends SubsystemBase {
     xPercent = speed * Math.cos(Math.toRadians(Math.abs(navX.getAngle() % 360) - angle));
 
     driveOutputs.arcadeDrive(xPercent, zPercent);
+  }
+
+  public static Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+  public static DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftMotors.setVoltage(leftVolts);
+    rightMotors.setVoltage(rightVolts);
+    driveOutputs.feed();
   }
 
 }

@@ -6,10 +6,26 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.utilities.Cycle;
+
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -30,6 +46,16 @@ public class RobotContainer {
 
   // DriveTrain Initilization
   public static final DriveTrain DRIVE_TRAIN = new DriveTrain();
+
+  // ---------- Cycle Paths ---------- \\
+
+  public static final Cycle dropCycle = new Cycle(TrajectoryGenerator.generateTrajectory(
+      // Set Start to current position
+      DriveTrain.odometry.getPoseMeters(),
+      // Points to make a nice entry
+      List.of(new Translation2d(11.2, 7), new Translation2d(7.7, 3), new Translation2d(5.0, 1.0)),
+      // Final state
+      new Pose2d(1.9, 1.0, new Rotation2d(Math.PI)), DriveTrain.config));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -54,7 +80,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new JoystickButton(JOYSTICK, 1).toggleOnTrue(dropCycle);
   }
 
   /**
@@ -63,7 +89,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
+
     return null;
+
   }
 }
