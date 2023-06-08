@@ -91,7 +91,8 @@ public class DriveTrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   public DriveTrain() {
     // Invert the left side motors as they will be backwards
-    leftMotors.setInverted(true);
+    leftMotors.setInverted(false);
+    rightMotors.setInverted(true);
 
     // Create a drivetrain
     driveOutputs = new DifferentialDrive(leftMotors, rightMotors);
@@ -160,7 +161,7 @@ public class DriveTrain extends SubsystemBase {
   private void driverControl() {
     updateStickValues();
     if (Robot.isReal()) {
-      driveOutputs.arcadeDrive(-yPercent, zPercent);
+      driveOutputs.arcadeDrive(yPercent * 0.75, -zPercent * 0.75);
     } else {
       // Robot turns quickly, so we tone it down in simulation
       driveOutputs.arcadeDrive(-yPercent, zPercent * 0.4);
@@ -169,9 +170,9 @@ public class DriveTrain extends SubsystemBase {
   }
 
   private void updateStickValues() {
-    xPercent = RobotContainer.JOYSTICK.getX();
-    yPercent = RobotContainer.JOYSTICK.getY();
-    zPercent = RobotContainer.JOYSTICK.getZ();
+    xPercent = RobotContainer.XBOX_CONTROLLER.getLeftX();
+    yPercent = RobotContainer.XBOX_CONTROLLER.getLeftY();
+    zPercent = RobotContainer.XBOX_CONTROLLER.getRightX();
 
   }
 

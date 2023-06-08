@@ -27,15 +27,11 @@ public final class Constants {
     public static final double DEADZONE = 0.05;
   }
 
-  /**
-   * Please use motor naming conventions when naming motors!
-   * (Start from front right and travel clockwise)
-   */
   public static final class Motors {
-    public static final int FRONT_RIGHT_PORT = 1;
-    public static final int REAR_RIGHT_PORT = 2;
-    public static final int REAR_LEFT_PORT = 3;
-    public static final int FRONT_LEFT_PORT = 4;
+    public static final int FRONT_RIGHT_PORT = 4;
+    public static final int REAR_RIGHT_PORT = 3;
+    public static final int REAR_LEFT_PORT = 2;
+    public static final int FRONT_LEFT_PORT = 1;
 
     /** Wheel Encoder Resolution */
     public static final int ENCODER_RESOLUTION = 2048;
