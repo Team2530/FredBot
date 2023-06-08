@@ -14,6 +14,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -88,6 +89,8 @@ public class DriveTrain extends SubsystemBase {
   /** Field Simulation */
   private final Field2d field = new Field2d();
 
+  SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(0.75, -1, 0.0);
+
   /** Creates a new DriveTrain. */
   public DriveTrain() {
     // Invert the left side motors as they will be backwards
@@ -161,10 +164,10 @@ public class DriveTrain extends SubsystemBase {
   private void driverControl() {
     updateStickValues();
     if (Robot.isReal()) {
-      driveOutputs.arcadeDrive(yPercent * 0.75, -zPercent * 0.75);
+      driveOutputs.arcadeDrive(forwardRateLimiter.calculate(yPercent) * 0.75, -zPercent * 0.75);
     } else {
       // Robot turns quickly, so we tone it down in simulation
-      driveOutputs.arcadeDrive(-yPercent, zPercent * 0.4);
+      driveOutputs.arcadeDrive(forwardRateLimiter.calculate(yPercent) * 0.75, zPercent * 0.4);
     }
 
   }
