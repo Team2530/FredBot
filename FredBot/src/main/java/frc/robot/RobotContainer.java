@@ -6,10 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.*;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Dumper;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -30,6 +33,9 @@ public class RobotContainer {
 
   // DriveTrain Initilization
   public static final DriveTrain DRIVE_TRAIN = new DriveTrain();
+
+  // Dumper Initilization
+  public static final Dumper DUMPER = new Dumper();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -54,7 +60,12 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+
+    // Rotate the Dumper by 60 degrees when pressed
+    new JoystickButton(XBOX_CONTROLLER, Controller.X_DUMPER_ROTATE).onTrue(new InstantCommand(() -> {
+      DUMPER.rotate();
+    }));
+
   }
 
   /**

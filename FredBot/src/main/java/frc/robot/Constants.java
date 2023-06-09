@@ -25,6 +25,8 @@ public final class Constants {
 
     /** Controller Deadzones */
     public static final double DEADZONE = 0.05;
+
+    public static final int X_DUMPER_ROTATE = 1;
   }
 
   public static final class Motors {
@@ -63,6 +65,14 @@ public final class Constants {
 
     /** DriveTrain gear ratio as output / input */
     public static final double GEAR_RATIO = 8;
+  }
+
+  public static class DumperConstants {
+    public static final double GEAR_RATIO = 100;
+
+    public static final int DUMPER_ENCODER_CHANNEL = 4;
+
+    public static final int DUMPER_MOTOR_PORT = 5;
   }
 
 }

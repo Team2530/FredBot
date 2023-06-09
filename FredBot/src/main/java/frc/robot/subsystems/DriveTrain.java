@@ -89,7 +89,7 @@ public class DriveTrain extends SubsystemBase {
   /** Field Simulation */
   private final Field2d field = new Field2d();
 
-  SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(0.75, -1, 0.0);
+  SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(0.75, -0.75, 0.0);
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
