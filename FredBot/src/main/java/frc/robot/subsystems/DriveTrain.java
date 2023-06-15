@@ -89,7 +89,7 @@ public class DriveTrain extends SubsystemBase {
   /** Field Simulation */
   private final Field2d field = new Field2d();
 
-  SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(0.75, -0.75, 0.0);
+  // SlewRateLimiter forwardRateLimiter = new SlewRateLimiter(1, -1, 0.0);
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
@@ -164,10 +164,10 @@ public class DriveTrain extends SubsystemBase {
   private void driverControl() {
     updateStickValues();
     if (Robot.isReal()) {
-      driveOutputs.arcadeDrive(forwardRateLimiter.calculate(yPercent) * 0.75, -zPercent * 0.75);
+      driveOutputs.arcadeDrive(-yPercent * 0.5, -zPercent * 0.6);
     } else {
       // Robot turns quickly, so we tone it down in simulation
-      driveOutputs.arcadeDrive(forwardRateLimiter.calculate(yPercent) * 0.75, zPercent * 0.4);
+      driveOutputs.arcadeDrive(yPercent * 0.75, zPercent * 0.4);
     }
 
   }

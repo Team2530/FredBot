@@ -5,37 +5,42 @@ import frc.robot.Constants.DumperConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Dumper extends SubsystemBase {
 
-    private WPI_TalonSRX dumperMotor = new WPI_TalonSRX(DumperConstants.DUMPER_MOTOR_PORT);
+    public static WPI_TalonSRX dumperMotor = new WPI_TalonSRX(DumperConstants.DUMPER_MOTOR_PORT);
 
-    private double currentPosition = 0.0;
+    private PIDController rotPID = new PIDController(0.000005, 0, 0.000001);
+
+    public static double currentPosition = 0.0;
     private double wantedPosition = 0.0;
 
     public Dumper() {
-        // Radians per tick
+        dumperMotor.setSelectedSensorPosition(0.0);
         currentPosition = dumperMotor.getSelectedSensorPosition();
+        wantedPosition = 0;
+    }
 
+    public double calamp(double mi, double ma, double v) {
+        return Math.max(mi, Math.min(ma, v));
     }
 
     @Override
     public void periodic() {
         currentPosition = dumperMotor.getSelectedSensorPosition();
-        SmartDashboard.putNumber("Dumper Position (Radians)", currentPosition);
-        if (currentPosition < wantedPosition) {
-            dumperMotor.set(0.25);
-        } else {
-            dumperMotor.set(0.0);
-        }
+        SmartDashboard.putNumber("Dumper Position", currentPosition);
+        SmartDashboard.putNumber("Wanted DUmper", wantedPosition);
+        dumperMotor.set(calamp(-0.15, 0.15, rotPID.calculate(currentPosition, wantedPosition)));
+        System.out.println(rotPID.calculate(currentPosition, wantedPosition));
     }
 
     public void rotate() {
-        // Rotate 60 degrees
-        wantedPosition = currentPosition + Math.PI / 3;
+        // Rotate 60 degrees (Just value from testing)
+        wantedPosition = wantedPosition + (409600d / 6.0d);
     }
 
 }
