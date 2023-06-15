@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Dumper extends SubsystemBase {
-    private Encoder dumperEncoder = new Encoder(DumperConstants.DUMPER_ENCODER_CHANNEL,
-            DumperConstants.DUMPER_ENCODER_CHANNEL + 1);
 
     private WPI_TalonSRX dumperMotor = new WPI_TalonSRX(DumperConstants.DUMPER_MOTOR_PORT);
 
@@ -20,13 +18,13 @@ public class Dumper extends SubsystemBase {
 
     public Dumper() {
         // Radians per tick
-        dumperEncoder.setDistancePerPulse(2 * Math.PI / Motors.ENCODER_RESOLUTION);
-        currentPosition = dumperEncoder.getDistance();
+        currentPosition = dumperMotor.getSelectedSensorPosition();
+
     }
 
     @Override
     public void periodic() {
-        currentPosition = dumperEncoder.getDistance();
+        currentPosition = dumperMotor.getSelectedSensorPosition();
         SmartDashboard.putNumber("Dumper Position (Radians)", currentPosition);
         if (currentPosition < wantedPosition) {
             dumperMotor.set(0.25);
