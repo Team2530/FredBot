@@ -22,6 +22,7 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -164,19 +165,17 @@ public class DriveTrain extends SubsystemBase {
   private void driverControl() {
     updateStickValues();
     if (Robot.isReal()) {
-      driveOutputs.arcadeDrive(-yPercent * 0.5, -zPercent * 0.6);
+      driveOutputs.arcadeDrive(-yPercent * 0.6, -zPercent * 0.6);
     } else {
       // Robot turns quickly, so we tone it down in simulation
       driveOutputs.arcadeDrive(yPercent * 0.75, zPercent * 0.4);
     }
-
   }
 
   private void updateStickValues() {
     xPercent = RobotContainer.XBOX_CONTROLLER.getLeftX();
     yPercent = RobotContainer.XBOX_CONTROLLER.getLeftY();
     zPercent = RobotContainer.XBOX_CONTROLLER.getRightX();
-
   }
 
   public static void changeDriveMode(ControlMode c) {

@@ -26,7 +26,7 @@ public final class Constants {
     /** Controller Deadzones */
     public static final double DEADZONE = 0.05;
 
-    public static final int X_DUMPER_ROTATE = 1;
+    public static final int X_DUMPER_ROTATE = 6;
   }
 
   public static final class Motors {
